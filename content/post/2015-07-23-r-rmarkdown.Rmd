@@ -24,7 +24,9 @@ The 2019 Canadian Election Study - Phone Survey gathered the attitudes and opini
 
 ```{r}
 #install.packages("devtools")
-#devtools::install_github("hodgettsp/cesR")
+library(devtools)
+devtools::install_github("hodgettsp/cesR")
+library(cesR)
 get_ces("ces2019_phone")
 data <- ces2019_phone
 ```
@@ -61,6 +63,8 @@ We can see there are 9 variables and 4021 observations, there exists a few missi
 
 
 ```{r}
+install.packages("tidyverse")
+library(tidyverse)
 selected_data %>% 
   ggplot(aes(x = household_income)) +
   geom_bar(col="blue")  +

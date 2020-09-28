@@ -1,11 +1,78 @@
----
-title: "Opinion towards Liberal and gender"
-author: "Zhiang Chen"
-date: 2015-07-23T21:13:14-05:00
-categories: ["R"]
-tags: ["R Markdown", "plot", "regression"]
----
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.75.1" />
 
+
+<title>Opinion towards Liberal and gender - A Hugo website</title>
+<meta property="og:title" content="Opinion towards Liberal and gender - A Hugo website">
+
+
+  <link href='../../../../favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="../../../../css/fonts.css" media="all">
+<link rel="stylesheet" href="../../../../css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="../../../../" class="nav-logo">
+    <img src="../../../../images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="../../../../about/">About</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">10 min read</span>
+    
+
+    <h1 class="article-title">Opinion towards Liberal and gender</h1>
+
+    
+    <span class="article-date">2015-07-23</span>
+    
+
+    <div class="article-content">
+      
 
 
 <div id="abstract" class="section level1">
@@ -85,7 +152,7 @@ selected_data</code></pre>
 <pre class="r"><code>#install.packages(&quot;visdat&quot;)
 library(visdat)
 visdat::vis_dat(selected_data) </code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>summary(selected_data)</code></pre>
 <pre><code>##        id          year_of_born      gender      how_interesting_in_election
 ##  Min.   :    18   Min.   :1919   Min.   :1.000   Min.   : 0.000             
@@ -131,7 +198,7 @@ visdat::vis_dat(selected_data) </code></pre>
        caption = &quot;Data source: the dataset is from 2019 CES dataset&quot;)</code></pre>
 <pre><code>## Don&#39;t know how to automatically pick scale for object of type haven_labelled/vctrs_vctr/double. Defaulting to continuous.</code></pre>
 <pre><code>## Warning: Removed 946 rows containing non-finite values (stat_count).</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>summary(selected_data$household_income)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##       0   45000   80000  105046  140000 2120000     946</code></pre>
@@ -153,7 +220,7 @@ ggplot(selected_data, aes(x=gender, y=opinion_towards_Liberal)) +
        caption = &quot;Data source: the dataset is from 2019 CES dataset&quot;)</code></pre>
 <pre><code>## Don&#39;t know how to automatically pick scale for object of type haven_labelled/vctrs_vctr/double. Defaulting to continuous.</code></pre>
 <pre><code>## Warning: Removed 82 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>opinion_towards_Liberal_gender &lt;- selected_data %&gt;% select(opinion_towards_Liberal, gender)
 opinion_towards_Liberal_gender &lt;- na.omit(opinion_towards_Liberal_gender) 
 
@@ -218,3 +285,47 @@ computing. R Foundation for Statistical Computing, Vienna, Austria. URL
 <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
 <p>Code and data supporting this analysis is available at: “<a href="https://github.com/DanteChen0825/STA304" class="uri">https://github.com/DanteChen0825/STA304</a>”.</p>
 </div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="../../../../index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="../../../../images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="../../../../js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
