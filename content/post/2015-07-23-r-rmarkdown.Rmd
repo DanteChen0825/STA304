@@ -1,0 +1,150 @@
+---
+title: "Opinion towards Liberal and gender"
+author: "Zhiang Chen"
+date: 2015-07-23T21:13:14-05:00
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+# Abstract
+"In this paper we analysed the 2019 CES phone survey data. By analyzing the data, the results showed that females have more positive opinion towards Liberal in Canada. These results are important because it gives a forecast people's behavior in the election and can give a positive impact on the party's campaign strategy."
+
+# Introduction
+In Canada, the difference political opinion among genders have been extended in the last election. It might be a dangerous signal that after the race, each gender may have their own "identity politics". Thus, by analyzing the opinions in each genders towards Liberal we can have a glance at the situation. We find that the female hold a more positive opinion towards Liberal.
+
+In our study, we analyzed the data from the 2019 CES phone survey, we try to find the relationship between each individuals opinion towards Liberal(a numeric score) and gender(male, female and others), we find that there exist a significant difference on their attitudes. On a scale of 0-100, the median score female respondents give is 60 which male respondents give is only 50.
+
+We analyzed the different popularity of Liberal in each gender. However we may ignore some other facts that also influence people's choices, for example income, since Liberal party may give higher tax rate for high-income groups. For further study we can focus on these factors which may also influence people's attitudes and opinions in the election and not only limitted to gender.
+
+
+
+# Data
+
+The 2019 Canadian Election Study - Phone Survey gathered the attitudes and opinions of Canadians during and after the 2019 federal election, and used to study the reasons of peoples' choice. It widely assemble Canadians' attitudes on the social issues, economics and political opinions. The 2019 CES phone survey dataset contains the data from the result of the phone survey of 2019 Canadian Election.
+
+```{r}
+#install.packages("devtools")
+#devtools::install_github("hodgettsp/cesR")
+get_ces("ces2019_phone")
+data <- ces2019_phone
+```
+
+We mainly focus on some of the variables that are listed in the table below:
+
+```{r}
+library(dplyr)
+selected_data <- data %>% select(sample_id, q2, q3, q9, q14, q15, q16, q61, q69)
+colnames(selected_data) <- c("id", "year_of_born", "gender", "how_interesting_in_election", "opinion_towards_Liberal", "opinion towards Conservative", "opinion towards NDP", "education", "household_income" )
+data_description <- data.frame(CES_names=c("sample_id", "q2", "q3", "q9", "q14", "q15", "q16", "q61", "q69"),variable_descriptions=c("id", "year of born", "gender", "how interesting in election?", "opinion towards Liberal", "opinion towards Conservative", "opinion towards NDP", "education", "household income"))
+data_description
+```
+
+We can see that how interesting in election, opinion towards Liberal, Conservative and NDP are represented by the number, higher number means more positive, lower number means more negative. And negative number means that the  respondents don't know the answer or chose not to answer which should be treated like missing values. Thus we need to replace that negative values with NA.
+
+```{r}
+selected_data[selected_data==-9] <- NA
+selected_data[selected_data==-8] <- NA
+selected_data[selected_data==-6] <- NA
+selected_data
+```
+
+The following graph showing the type of each variables,and it also shows the distribution of the missing values in order to avoid that the missing value influence the result.
+
+```{r}
+#install.packages("visdat")
+library(visdat)
+visdat::vis_dat(selected_data) 
+summary(selected_data)
+```
+
+We can see there are 9 variables and 4021 observations, there exists a few missing values in opinions towards parties and house hold income.
+
+
+```{r}
+selected_data %>% 
+  ggplot(aes(x = household_income)) +
+  geom_bar(col="blue")  +
+  labs(title="Household income barplot", 
+       caption = "Data source: the dataset is from 2019 CES dataset")
+summary(selected_data$household_income)
+```
+From the household income data we know that the 1st Quartile is 45000, the Median household income is 80000, the 3rd Quantile is 140000. 946 out of 4021 people's household income data are unavailable.
+
+```{r}
+sexuality_num = table(selected_data$gender)
+sexuality_prob = round(prop.table(table(selected_data$gender)), 3)
+sexuality_summary <- data.frame(gender = c("male", "female", "other"), sexuality_num , sexuality_prob)
+sexuality_summary
+```
+From the sexuality data we know that 56.5% of the respondents are male, 43.5% of the respondents are female and the other 1 people choose the other sexuality.
+
+
+#Graph
+
+```{r}
+selected_data$gender <- as.character(selected_data$gender)
+ggplot(selected_data, aes(x=gender, y=opinion_towards_Liberal)) + 
+  geom_boxplot() + theme_bw() + 
+  labs(title="Box plot of opinion towards Liberal and gender", x="gender", y="income",
+       caption = "Data source: the dataset is from 2019 CES dataset")
+
+```
+
+```{r}
+opinion_towards_Liberal_gender <- selected_data %>% select(opinion_towards_Liberal, gender)
+opinion_towards_Liberal_gender <- na.omit(opinion_towards_Liberal_gender) 
+
+opinion_towards_Liberal_gender_summary <- opinion_towards_Liberal_gender %>% group_by(gender) %>% summarise(maximum = max(opinion_towards_Liberal), minimum = min(opinion_towards_Liberal), median = median(opinion_towards_Liberal), mean = mean(opinion_towards_Liberal), variance= var(opinion_towards_Liberal), standard_deviation = sd(opinion_towards_Liberal))
+opinion_towards_Liberal_gender_summary
+```
+
+```{r}
+opinion_towards_Liberal_gender = opinion_towards_Liberal_gender[opinion_towards_Liberal_gender$gender != 3,]
+t.test(opinion_towards_Liberal_gender$opinion_towards_Liberal~opinion_towards_Liberal_gender$gender)
+```
+Since there is only 1 data of the third sexuality, it will not influence the result significantly, thus in order to do a T-test we only considering male and female. The p-value is smaller than 0.05 thus we have strong evidence against the null hypothesis.
+
+# Graph Discussion
+
+From the summary we can see the difference attitude towards Liberal on each gender.Even though both male and female have great supporters (who gives score of 100) and Opponents (who gives score of 0), but female's median and mean is much higher compare to male. Also, female's income have smaller variance and standard deviation, which means within the same gender, the opinion difference is smaller in female compare to male.
+
+Thus we may say that Liberal's popularity is different in different gender.
+
+# Discussion
+By analyzing the data for the 2019 CES phone survey data we can notice a significant different opinion towards Liberal in male and female. Liberal have more popularity among female which manifest as more positive rate. The box plot of gender and opinions and the data group by gender can support the conclusion. Also, the p-value from the t-test give us strong evidence support our conclusion. In order to do a t-test, we ignore the genders other than male and female, in our sample there is only one data have been ignore but we might need another statistical analysis method for more accurate analyze.
+
+# Weakness and Next Steps
+There exist some of missing values which we chose to ignore, it might cause a biased result. Also, there exists some other factors that might impact people's opinions towards Liberal like income. We can not get a direct causal relationship between gender and opinion towards Liberal.
+
+In the further study we can try to get more detailed data to avoid missing values and investigate the relationship between each genders' income and their opinion towards Liberal, other factors may also be considered. Then we can have a more accurate results.
+
+
+# References
+
+
+- Stephenson, Laura B; Harell, Allison; Rubenson, Daniel; Loewen, Peter John, 2020, '2019 Canadian Election Study - Phone Survey', https://doi.org/10.7910/DVN/8RHLG1, Harvard Dataverse, V1, UNF:6:eyR28qaoYlHj9qwPWZmmVQ== [fileUNF]
+
+- Stephenson, Laura, Allison Harrel, Daniel Rubenson and Peter Loewen. Forthcoming. 'Measuring Preferences and Behaviour in the 2019 Canadian Election Study,' Canadian Journal of Political Science.
+
+LINK: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/8RHLG1
+
+Hadley Wickham, Jim Hester and Winston Chang (2020). devtools: Tools to
+Make Developing R Packages Easier. https://devtools.r-lib.org/,
+https://github.com/r-lib/devtools.
+
+Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020).
+dplyr: A Grammar of Data Manipulation. https://dplyr.tidyverse.org,
+https://github.com/tidyverse/dplyr.
+
+Tierney N (2017). “visdat: Visualising Whole Data Frames.” _JOSS_, *2*(16),
+355. doi: 10.21105/joss.00355 (URL: https://doi.org/10.21105/joss.00355),
+<URL: http://dx.doi.org/10.21105/joss.00355>.
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
+Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+R Core Team (2020). R: A language and environment for statistical
+computing. R Foundation for Statistical Computing, Vienna, Austria. URL
+https://www.R-project.org/.
+
+Code and data supporting this analysis is available at: "https://github.com/DanteChen0825/STA304".
